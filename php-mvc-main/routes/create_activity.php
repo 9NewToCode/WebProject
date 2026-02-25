@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = getConnection();
     
-    // รับค่าที่ส่งมาจากฟอร์ม 
+    // รับค่าที่ส่งมาจากฟอร์ม
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $participant_limit = (int)($_POST['participant_limit'] ?? 0);

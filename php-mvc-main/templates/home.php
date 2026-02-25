@@ -1,9 +1,14 @@
 <?php include __DIR__ . '/header.php'; ?>
 
 <main style="padding: 20px;">
-    <h2>รายการกิจกรรมทั้งหมด</h2>
-    <a href="/create_activity" style="display: inline-block; margin-bottom: 20px; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">+ สร้างกิจกรรมใหม่</a>
-    <hr>
+    
+    <div style="margin-bottom: 30px;">
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="/create_activity" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">+ สร้างกิจกรรมใหม่</a>
+        <?php endif; ?>
+    </div>
+
+    <h2 style="border-bottom: 2px solid #eee; padding-bottom: 10px; color: #333;">รายการกิจกรรมทั้งหมด</h2>
 
     <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
 
@@ -28,13 +33,13 @@
 
                         <p style="margin: 5px 0;"><strong> รับสมัคร:</strong> <?= htmlspecialchars($activity['Max_Participants']) ?> คน</p>
 
-                        <a href="/activity_detail?id=<?= $activity['AID'] ?>" style="display: block; text-align: center; margin-top: 15px; padding: 8px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">ดูรายละเอียด</a>
+                        <a href="/activity_detail?id=<?= $activity['AID'] ?>" style="display: block; text-align: center; margin-top: 15px; padding: 8px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">ดูรายละเอียด</a>
                     </div>
 
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p>ยังไม่มีกิจกรรมในระบบตอนนี้ ลองสร้างกิจกรรมแรกดูสิ!</p>
+            <p style="color: #666; font-style: italic;">ยังไม่มีกิจกรรมในระบบตอนนี้ ลองสร้างกิจกรรมแรกดูสิ!</p>
         <?php endif; ?>
 
     </div>

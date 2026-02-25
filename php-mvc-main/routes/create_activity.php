@@ -1,6 +1,11 @@
 <?php
-// ดึงการเชื่อมต่อฐานข้อมูลมาใช้
 require_once INCLUDES_DIR . '/database.php';
+
+//เช็คก่อนว่าล็อกอินหรือยัง
+if (!isset($_SESSION['user_id'])) {
+    echo "<script>alert('กรุณาเข้าสู่ระบบก่อนสร้างกิจกรรม'); window.location.href='/login';</script>";
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = getConnection();
@@ -11,10 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $participant_limit = (int)($_POST['participant_limit'] ?? 0);
     $event_date = $_POST['event_date'] ?? '';
     
-    // ชั่วคราว: กำหนด ID ของผู้สร้างกิจกรรมเป็น 1 ไปก่อน (ไว้ค่อยเชื่อมกับระบบ Login ทีหลัง)
-    $cid = 1; 
+    //ดึง UID จากระบบ Login
+    $cid = $_SESSION['user_id'];
 
-    //  คำสั่ง SQL สำหรับบันทึกลงตาราง Activity
+    //บันทึกลงตาราง Activity
     $sql = "INSERT INTO Activity (CID, Title, Description, Max_Participants, StartDate) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     

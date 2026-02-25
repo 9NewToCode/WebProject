@@ -3,13 +3,17 @@ require_once INCLUDES_DIR . '/database.php';
 
 $aid = $_GET['id'] ?? 0;
 
-// ชั่วคราว: สมมติว่าคนที่กดสมัครคือ User หมายเลข 2 (ผู้เข้าร่วม) 
-$uid = 2; 
+if (!isset($_SESSION['user_id'])) {
+    die("<script>alert('กรุณาเข้าสู่ระบบก่อนสมัครกิจกรรม'); window.location.href='/login';</script>");
+}
+
+// ใช้รหัสของผู้ใช้ที่ล็อกอินอยู่ เป็นคนกดสมัคร
+$uid = $_SESSION['user_id'];
 
 if ($aid > 0) {
     $conn = getConnection();
     
-    // เช็คก่อนว่า Userคนนี้ เคยสมัครกิจกรรมนี้ไปแล้วหรือยัง?
+    // เช็คว่าUserคนนี้ เคยสมัครกิจกรรมนี้ไปยัง
     $check_sql = "SELECT * FROM Registration WHERE AID = ? AND UID = ?";
     $check_stmt = $conn->prepare($check_sql);
     $check_stmt->bind_param("ii", $aid, $uid);
@@ -22,7 +26,7 @@ if ($aid > 0) {
     }
 
     // ถ้ายังไม่เคยสมัคร ให้บันทึกข้อมูลลงตาราง Registration
-    $status = 'pending'; // สถานะเริ่มต้นคือ รอการอนุมัติ
+    $status = 'pending'; // สถานะเริ่มต้นเป็นรอการอนุมัติ
     
     // ตรวจสอบชื่อคอลัมน์ให้ตรงกับตาราง Registration ในดาตาเบส
     $sql = "INSERT INTO Registration (AID, UID, Status) VALUES (?, ?, ?)";

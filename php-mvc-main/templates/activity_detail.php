@@ -21,17 +21,33 @@
     </div>
 
     <div style="margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
-        
-        <a href="/" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;"> กลับหน้าแรก</a>
-        
-        <a href="/register_activity?id=<?= $act['AID'] ?>" onclick="return confirm('ยืนยันการสมัครเข้าร่วมกิจกรรมนี้ใช่หรือไม่?');" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;"> สมัครเข้าร่วมกิจกรรม</a>
+    
+    <a href="/" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;"> กลับหน้าแรก</a>
 
-        <a href="/edit_activity?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #ffc107; color: black; text-decoration: none; border-radius: 5px;"> แก้ไขกิจกรรม</a>
+    <?php 
+        // เช็คว่าใครล็อกอินอยู่ ถ้ายังเป็น0
+        $current_uid = $_SESSION['user_id'] ?? 0; 
+    ?>
 
-        <a href="/delete_activity?id=<?= $act['AID'] ?>" onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?');" style="padding: 10px 20px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px;"> ลบกิจกรรม</a>
-        
-        <a href="/manage_participants?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #17a2b8; color: white; text-decoration: none; border-radius: 5px;"> รายชื่อผู้สมัคร</a>
-    </div>
+    <?php if ($current_uid > 0): //ล็อกอินแล้ว ถึงจะเห็นปุ่ม ?>
+    
+        <?php if ($current_uid === $act['CID']): // เช็คว่า UID ตรงกับรหัสผู้สร้างกิจกรรมมั้ย ?>
+            
+            <a href="/edit_activity?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #ffc107; color: black; text-decoration: none; border-radius: 5px;">แก้ไขกิจกรรม</a>
+            <a href="/delete_activity?id=<?= $act['AID'] ?>" onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?');" style="padding: 10px 20px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px;">ลบกิจกรรม</a>
+            <a href="/manage_participants?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #17a2b8; color: white; text-decoration: none; border-radius: 5px;">รายชื่อผู้สมัคร</a>
+            
+        <?php else: ?>
+            
+            <a href="/register_activity?id=<?= $act['AID'] ?>" onclick="return confirm('ยืนยันการสมัครเข้าร่วมกิจกรรมนี้ใช่หรือไม่?');" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">สมัครเข้าร่วมกิจกรรม</a>
+            
+        <?php endif; ?>
+
+    <?php else: // ถ้ายังไม่ได้ล็อกอิน ?>
+        <p style="color: red; margin-left: 10px;">*กรุณา <a href="/login">เข้าสู่ระบบ</a> เพื่อสมัครหรือจัดการกิจกรรม</p>
+    <?php endif; ?>
+    
+</div>
 </main>
 
 <?php include __DIR__ . '/footer.php'; ?>

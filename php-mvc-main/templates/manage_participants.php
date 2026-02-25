@@ -6,7 +6,7 @@
 
     <table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse; text-align: left;">
         <thead style="background: #f4f4f4;">
-            tr>
+            <tr>
             <th style="padding: 10px;">ชื่อผู้ใช้</th>
             <th style="padding: 10px;">อีเมล</th>
             <th style="padding: 10px;">สถานะ</th>
@@ -17,7 +17,7 @@
             <?php while ($p = $data['participants']->fetch_assoc()): ?>
                 <tr>
                     <td style="padding: 10px;">
-                        <<a href="/user_profile?uid=<?= $p['UID'] ?>&aid=<?= $data['aid'] ?>" style="text-decoration: none; color: #007bff; font-weight: bold;">
+                        <a href="/user_profile?uid=<?= $p['UID'] ?>&aid=<?= $data['aid'] ?>" style="text-decoration: none; color: #007bff; font-weight: bold;">
                             <?= htmlspecialchars($p['Name']) ?> 
                         </a>
                     </td>

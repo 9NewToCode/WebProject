@@ -24,8 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO Activity (CID, Title, Description, Max_Participants, StartDate, EndDate) VALUES (?, ?, ?, ?, ?,?)";
     $stmt = $conn->prepare($sql);
     
-    // s = string, i = integer
-    // ปรับสติงประเภทข้อมูลเป็น "ississ" (CID=i, Title=s, Desc=s, Max=i, Start=s, End=s)
+    // ปรับสติงประเภทข้อมูลเป็น 
     $stmt->bind_param("ississ", $cid, $title, $description, $participant_limit, $start_date, $end_date);
     
     if ($stmt->execute()) {
@@ -54,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // ย้ายไฟล์รูปภาพไปเก็บที่โฟลเดอร์ public/uploads
                     if (move_uploaded_file($file_tmp, $destination)) {
                         // บันทึกเส้นทางรูปลงตาราง Activity_Image
-                        $image_path = '/uploads/' . $new_file_name; 
+                        $image_path = '/public/uploads/' . $new_file_name; 
                         $sql_img = "INSERT INTO Activity_Image (AID, Image_Path) VALUES (?, ?)";
                         $stmt_img = $conn->prepare($sql_img);
                         $stmt_img->bind_param("is", $activity_id, $image_path);

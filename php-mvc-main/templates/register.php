@@ -1,15 +1,15 @@
 <h2>สมัครสมาชิก</h2>
 
-<form method="POST" action="/register">
+<form method="POST" action="registerAddUser">
 
     ชื่อ:<br>
     <input type="text" name="name" required><br><br>
 
     เพศ:<br>
     <select name="gender">
-        <option value="ชาย">ชาย</option>
-        <option value="หญิง">หญิง</option>
-        <option value="อื่นๆ">อื่นๆ</option>
+        <option value="male">ชาย</option>
+        <option value="female">หญิง</option>
+        <option value="other">อื่นๆ</option>
     </select><br><br>
 
     Email:<br>

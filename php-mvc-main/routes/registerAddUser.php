@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(!checkDuplicateEmail($email)){
         $result =
         insertUserInfo($name, $gender, $email, $birthdate, $occupation, $province, $password);
-        echo "สมัครสมาชิกสำเร็จ!";
+        renderView('login');
     } else {
         echo "No";
     }

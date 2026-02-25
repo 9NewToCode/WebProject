@@ -4,7 +4,7 @@
     <h2> แก้ไขกิจกรรม</h2>
     <?php $act = $data['activity']; ?>
     
-    <form action="/edit_activity" method="POST">
+    <form action="/edit_activity?id=<?= $act['AID'] ?>" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= $act['AID'] ?>">
         
         <label>ชื่อกิจกรรม:</label><br>
@@ -22,6 +22,9 @@
         <label>วันที่สิ้นสุด:</label><br>
         <input type="date" name="end_date" value="<?= date('Y-m-d', strtotime($act['EndDate'])) ?>" required style="width: 100%; padding: 8px;"><br><br>
         
+        <label>อัปโหลดรูปภาพใหม่ (หากไม่ต้องการเปลี่ยนรูป ก็ไม่ต้องใส่):</label><br>
+        <input type="file" name="images[]" accept="image/*" multiple style="width: 100%; padding: 8px;"><br><br>
+
         <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;"> บันทึกการแก้ไข</button>
         <a href="/activity_detail?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">ยกเลิก</a>
     </form>

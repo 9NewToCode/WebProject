@@ -5,14 +5,14 @@ require_once INCLUDES_DIR . '/database.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = getConnection();
     
-    // รับค่าที่ส่งมาจากฟอร์ม 
+    // รับค่าที่ส่งมาจากฟอร์ม
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $participant_limit = (int)($_POST['participant_limit'] ?? 0);
     $event_date = $_POST['event_date'] ?? '';
     
     // ชั่วคราว: กำหนด ID ของผู้สร้างกิจกรรมเป็น 1 ไปก่อน (ไว้ค่อยเชื่อมกับระบบ Login ทีหลัง)
-    $cid = 1; 
+    $cid = 1;
 
     //  คำสั่ง SQL สำหรับบันทึกลงตาราง Activity
     $sql = "INSERT INTO Activity (CID, Title, Description, Max_Participants, StartDate) VALUES (?, ?, ?, ?, ?)";

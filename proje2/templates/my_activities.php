@@ -32,6 +32,7 @@
                                 <span style="background: #ffc107; color: black; padding: 4px 8px; border-radius: 4px; font-size: 14px;">⏳ รอการอนุมัติ</span>
                             <?php endif; ?>
                         </div>
+                        <a href="/details-of-my_activities?id=<?= $activity['AID'] ?>" style="display: block; text-align: center; margin-top: 15px; padding: 8px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">ดูรายละเอียด</a>
 
                     </div>
                 </div>

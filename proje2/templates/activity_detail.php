@@ -27,12 +27,14 @@
 
     <?php 
         // เช็คว่าใครล็อกอินอยู่ ถ้ายังเป็น0
-        $current_uid = $_SESSION['user_id'] ?? 0; 
+        $current_uid = $_SESSION['user_id'] ?? 0;
+        $user_role = $_SESSION['role'] ?? 'user'; // ดึงบทบาทจาก Session
+         
     ?>
 
     <?php if ($current_uid > 0): //ล็อกอินแล้ว ถึงจะเห็นปุ่ม ?>
     
-        <?php if ($current_uid === $act['CID']): // เช็คว่า UID ตรงกับรหัสผู้สร้างกิจกรรมมั้ย ?>
+        <?php if ($current_uid === $act['CID'] || $user_role === 'admin'): // เช็คว่า UID ตรงกับรหัสผู้สร้างกิจกรรมมั้ย ?>
             
             <a href="/edit_activity?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #ffc107; color: black; text-decoration: none; border-radius: 5px;">แก้ไขกิจกรรม</a>
             <a href="/delete_activity?id=<?= $act['AID'] ?>" onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้?');" style="padding: 10px 20px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px;">ลบกิจกรรม</a>

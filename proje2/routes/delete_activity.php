@@ -2,10 +2,38 @@
 require_once INCLUDES_DIR . '/database.php';
 
 // รับค่า ID ของกิจกรรมที่ต้องการลบจาก URL
+$current_uid = $_SESSION['user_id'] ?? 0;
+$user_role = $_SESSION['role'] ?? 'user'; // ดึงบทบาทจาก Session
+
+if ($current_uid <= 0) {
+    echo "<script>alert('กรุณาเข้าสู่ระบบก่อน'); window.location.href='/login';</script>";
+    exit;
+}
 $id = $_GET['id'] ?? 0;
 
 if ($id > 0) {
     $conn = getConnection();
+
+    // ✨ 2. เพิ่มส่วนตรวจสอบสิทธิ์: ดึงข้อมูลเจ้าของกิจกรรม (CID) มาเช็คก่อน ✨
+    $sql_check = "SELECT CID FROM Activity WHERE AID = ?";
+    $stmt_check = $conn->prepare($sql_check);
+    $stmt_check->bind_param("i", $id);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+    $activity = $result_check->fetch_assoc();
+
+    if (!$activity) {
+        echo "<script>alert('ไม่พบกิจกรรมที่ต้องการลบ'); window.location.href='/';</script>";
+        exit;
+    }
+
+    // ✅ เงื่อนไขหัวใจสำคัญ: ต้องเป็นเจ้าของ (CID ตรงกัน) หรือ เป็น Admin เท่านั้น
+    if ($current_uid !== $activity['CID'] && $user_role !== 'admin') {
+        echo "<script>alert('คุณไม่มีสิทธิ์ลบกิจกรรมนี้!'); window.location.href='/';</script>";
+        exit;
+    }
+
+    // --- เริ่มกระบวนการลบ (โค้ดเดิมของคุณ) ---
 
     //ค้นหารูปภาพของกิจกรรมนี้ เพื่อลบไฟล์ออกจากโฟลเดอร์ uploads ก่อน
     $sql_img = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";

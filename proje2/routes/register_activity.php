@@ -1,0 +1,45 @@
+<?php
+require_once INCLUDES_DIR . '/database.php';
+
+$aid = $_GET['id'] ?? 0;
+
+if (!isset($_SESSION['user_id'])) {
+    die("<script>alert('กรุณาเข้าสู่ระบบก่อนสมัครกิจกรรม'); window.location.href='/login';</script>");
+}
+
+// ใช้รหัสของผู้ใช้ที่ล็อกอินอยู่ เป็นคนกดสมัคร
+$uid = $_SESSION['user_id'];
+
+if ($aid > 0) {
+    $conn = getConnection();
+    
+    // เช็คว่าUserคนนี้ เคยสมัครกิจกรรมนี้ไปยัง
+    $check_sql = "SELECT * FROM Registration WHERE AID = ? AND UID = ?";
+    $check_stmt = $conn->prepare($check_sql);
+    $check_stmt->bind_param("ii", $aid, $uid);
+    $check_stmt->execute();
+    
+    if ($check_stmt->get_result()->num_rows > 0) {
+        // ถ้าเคยสมัครแล้ว ให้เด้งกลับไปพร้อมแจ้งเตือน
+        echo "<script>alert('คุณได้ส่งคำขอเข้าร่วมกิจกรรมนี้ไปแล้วครับ!'); window.location.href='/activity_detail?id=$aid';</script>";
+        exit;
+    }
+
+    // ถ้ายังไม่เคยสมัคร ให้บันทึกข้อมูลลงตาราง Registration
+    $status = 'pending'; // สถานะเริ่มต้นเป็นรอการอนุมัติ
+    
+    // ตรวจสอบชื่อคอลัมน์ให้ตรงกับตาราง Registration ในดาตาเบส
+    $sql = "INSERT INTO Registration (AID, UID, Status) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iis", $aid, $uid, $status);
+    
+    if ($stmt->execute()) {
+        echo "<script>alert('ส่งคำขอเข้าร่วมกิจกรรมสำเร็จ! กรุณารอผู้สร้างกิจกรรมอนุมัติ'); window.location.href='/activity_detail?id=$aid';</script>";
+    } else {
+        echo "<script>alert('เกิดข้อผิดพลาดในการสมัคร: " . $conn->error . "'); window.location.href='/activity_detail?id=$aid';</script>";
+    }
+} else {
+    // ถ้าไม่มีการส่ง ID กิจกรรมมา ให้เด้งกลับหน้าแรก
+    header("Location: /");
+}
+exit;

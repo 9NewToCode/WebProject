@@ -14,17 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $participant_limit = (int)($_POST['participant_limit'] ?? 0);
-    $event_date = $_POST['event_date'] ?? '';
+    $start_date = $_POST['start_date'] ?? '';
+    $end_date = $_POST['end_date'] ?? '';     // ✨ รับค่าวันสิ้นสุดเพิ่มเข้ามา
     
     //ดึง UID จากระบบ Login
     $cid = $_SESSION['user_id'];
 
     //บันทึกลงตาราง Activity
-    $sql = "INSERT INTO Activity (CID, Title, Description, Max_Participants, StartDate) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Activity (CID, Title, Description, Max_Participants, StartDate, EndDate) VALUES (?, ?, ?, ?, ?,?)";
     $stmt = $conn->prepare($sql);
     
-
-    $stmt->bind_param("issis", $cid, $title, $description, $participant_limit, $event_date);
+    // s = string, i = integer
+    // ปรับสติงประเภทข้อมูลเป็น "ississ" (CID=i, Title=s, Desc=s, Max=i, Start=s, End=s)
+    $stmt->bind_param("ississ", $cid, $title, $description, $participant_limit, $start_date, $end_date);
     
     if ($stmt->execute()) {
         // ดึง ID ของกิจกรรมที่เพิ่งถูกสร้างขึ้นมา เพื่อเอาไปเชื่อมกับรูปภาพ

@@ -19,29 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($stmt->execute()) {
         
-        //  ระบบจัดการรูปภาพ (เช็คว่าแนบไฟล์รูปมาด้วยมั้ย)
-        if (!empty($_FILES['images']['name'][0])) {
-            
-            // --- ลบรูปเก่าทิ้ง ---
-            $sql_old_img = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";
-            $stmt_old_img = $conn->prepare($sql_old_img);
-            $stmt_old_img->bind_param("i", $id);
-            $stmt_old_img->execute();
-            $result_old_img = $stmt_old_img->get_result();
-
-            while ($row = $result_old_img->fetch_assoc()){
-                $file_path = __DIR__ . '/../public' . $row['Image_Path']; 
+        //ระบบลบรูปเก่า (ตามที่ผู้ใช้ติ๊ก Checkbox) 
+        if (!empty($_POST['delete_images'])) {
+            $images_to_delete = $_POST['delete_images'];
+            foreach ($images_to_delete as $img_path) {
+                // ลบไฟล์ออกจากโฟลเดอร์ uploads
+                $file_path = __DIR__ . '/../public' . $img_path;
                 if (file_exists($file_path)) {
                     unlink($file_path);
                 }
+                // ลบข้อมูลออกจากฐานข้อมูล
+                $sql_del_img = "DELETE FROM Activity_Image WHERE AID = ? AND Image_Path = ?";
+                $stmt_del_img = $conn->prepare($sql_del_img);
+                $stmt_del_img->bind_param("is", $id, $img_path);
+                $stmt_del_img->execute();
             }
+        }
 
-            $sql_del_img = "DELETE FROM Activity_Image WHERE AID = ?";
-            $stmt_del_img = $conn->prepare($sql_del_img);
-            $stmt_del_img->bind_param("i", $id);
-            $stmt_del_img->execute();
-
-            // --- อัปโหลดรูปใหม่เข้าโฟลเดอร์ ---
+        // ระบบอัปโหลดรูปใหม่เพิ่มเติม (ทำงานแยกกัน ไม่ไปลบรูปเก่า) 
+        if (!empty($_FILES['images']['name'][0])) {
             $upload_dir = __DIR__ . '/../public/uploads/';
             $total_images = count($_FILES['images']['name']);
             
@@ -79,8 +75,24 @@ $stmt->execute();
 $activity = $stmt->get_result()->fetch_assoc();
 
 if (!$activity) {
-    echo "ไม่พบข้อมูลกิจกรรมนี้";
+    echo "ไม่พบข้อมูลกิจกรรม";
     exit;
 }
 
-renderView('edit_activity', ['activity' => $activity]);
+// ดึงรูปภาพเก่า
+$sql_img = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";
+$stmt_img = $conn->prepare($sql_img);
+$stmt_img->bind_param("i", $id);
+$stmt_img->execute();
+$result_img = $stmt_img->get_result();
+
+$images = [];
+while ($row = $result_img->fetch_assoc()) {
+    $images[] = $row['Image_Path'];
+}
+
+// ส่งข้อมูลไปให้ Template
+renderView('edit_activity', [
+    'activity' => $activity,
+    'images' => $images // ส่ง Array รูปภาพไปด้วย
+]);

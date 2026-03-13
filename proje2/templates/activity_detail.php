@@ -14,7 +14,7 @@
     <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
         <?php if (!empty($data['images'])): ?>
             <?php foreach ($data['images'] as $img): ?>
-                <img src="<?= htmlspecialchars($img) ?>" alt="รูปภาพกิจกรรม" style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px; box-shadow: 1px 1px 5px rgba(0,0,0,0.2);">
+                <img src="/public<?= htmlspecialchars($img) ?>" alt="รูปภาพกิจกรรม" style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px; box-shadow: 1px 1px 5px rgba(0,0,0,0.2);">
             <?php endforeach; ?>
         <?php else: ?>
             <p>ไม่มีรูปภาพสำหรับกิจกรรมนี้</p>

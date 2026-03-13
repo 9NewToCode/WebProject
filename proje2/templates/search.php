@@ -44,7 +44,7 @@
                 <div style="border: 1px solid #ddd; border-radius: 8px; width: 300px; overflow: hidden; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
                     
                     <?php if (!empty($activity['cover_image'])): ?>
-                        <img src="<?= htmlspecialchars($activity['cover_image']) ?>" alt="ภาพปกกิจกรรม" style="width: 100%; height: 180px; object-fit: cover;">
+                        <img src="/public<?= htmlspecialchars($activity['cover_image']) ?>" alt="ภาพปกกิจกรรม" style="width: 100%; height: 180px; object-fit: cover;">
                     <?php else: ?>
                         <div style="width: 100%; height: 180px; background: #eee; display: flex; align-items: center; justify-content: center; color: #888;">ไม่มีรูปภาพ</div>
                     <?php endif; ?>

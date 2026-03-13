@@ -22,6 +22,20 @@
         <label>วันที่สิ้นสุด:</label><br>
         <input type="date" name="end_date" value="<?= date('Y-m-d', strtotime($act['EndDate'])) ?>" required style="width: 100%; padding: 8px;"><br><br>
         
+        <label>รูปภาพปัจจุบัน (ติ๊กถูกที่ภาพเพื่อ <b>ลบทิ้ง</b>):</label><br>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: #f8d7da; padding: 10px; border-radius: 5px;">
+            <?php if (!empty($data['images'])): ?>
+                <?php foreach ($data['images'] as $img): ?>
+                    <div style="text-align: center; background: white; padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
+                        <img src="/public<?= htmlspecialchars($img) ?>" style="width: 100px; height: 80px; object-fit: cover; border-radius: 4px;"><br>
+                        <input type="checkbox" name="delete_images[]" value="<?= htmlspecialchars($img) ?>"> ลบรูปนี้
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p style="color: #666; margin: 0;">ยังไม่มีรูปภาพ</p>
+            <?php endif; ?>
+        </div>
+
         <label>อัปโหลดรูปภาพใหม่ (หากไม่ต้องการเปลี่ยนรูป ก็ไม่ต้องใส่):</label><br>
         <input type="file" name="images[]" accept="image/*" multiple style="width: 100%; padding: 8px;"><br><br>
 

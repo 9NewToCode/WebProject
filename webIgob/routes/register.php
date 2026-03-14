@@ -1,0 +1,23 @@
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // รับค่าจาก form
+    $name = $_POST['name'];
+    $gender = $_POST['gender'];
+    $email = $_POST['email'];
+    $birthdate = $_POST['birthdate'];
+    $occupation = $_POST['occupation'];
+    $province = $_POST['province'];
+    $password = $_POST['password'];
+
+    if (!checkDuplicateEmail($email)) {
+        $result =
+            insertUserInfo($name, $gender, $email, $birthdate, $occupation, $province, $password);
+        header('Location: /login');
+    } else {
+        echo "No";
+    }
+} else {
+    renderView('register');
+}

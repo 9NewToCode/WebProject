@@ -5,7 +5,7 @@ require_once INCLUDES_DIR . '/database.php';
 $id = $_GET['id'] ?? 0;
 $conn = getConnection();
 
-//  ดึงข้อมูลกิจกรรม
+// ดึงข้อมูลกิจกรรม
 $sql = "SELECT * FROM Activity WHERE AID = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
@@ -17,7 +17,7 @@ if (!$activity) {
     exit;
 }
 
-// ดึงรูปภาพ "ทั้งหมด" ของกิจกรรมนี้
+// ดึงรูปภาพ "ทั้งหมด" ของกิจกรรมนี้จากตาราง Activity_Image
 $sql_img = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";
 $stmt_img = $conn->prepare($sql_img);
 $stmt_img->bind_param("i", $id);

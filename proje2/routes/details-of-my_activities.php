@@ -29,7 +29,7 @@ while ($row = $result_img->fetch_assoc()) {
     $images[] = $row['Image_Path'];
 }
 
-// ✨ เพิ่มส่วนนี้: ดึงสถานะการสมัครของผู้ใช้ที่ล็อกอินอยู่
+//  ดึงสถานะการสมัครของผู้ใช้ที่ล็อกอินอยู่
 $user_status = null;
 $current_uid = $_SESSION['user_id'] ?? 0;
 

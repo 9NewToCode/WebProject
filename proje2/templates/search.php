@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/header.php'; ?>
 
 <main style="padding: 20px;">
-    
+
     <div style="margin-bottom: 15px;">
         <a href="/" style="display: inline-block; padding: 8px 15px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
             🏠 กลับหน้าหลัก
@@ -9,10 +9,10 @@
     </div>
 
     <h2>🔍 ค้นหากิจกรรม</h2>
-    
+
     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd;">
         <form action="/search" method="GET" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
-            
+
             <div style="flex: 1; min-width: 200px ; padding: 10px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">ชื่อกิจกรรม:</label>
                 <input type="text" name="search_name" placeholder="ระบุชื่อกิจกรรมที่ต้องการหา..." value="<?= htmlspecialchars($_GET['search_name'] ?? '') ?>" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
@@ -27,22 +27,22 @@
                 <label style="font-weight: bold; display: block; margin-bottom: 5px;">ถึงวันที่:</label>
                 <input type="date" name="end_date" value="<?= htmlspecialchars($_GET['end_date'] ?? '') ?>" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
             </div>
-            
+
             <div>
                 <button type="submit" style="padding: 10px; background: #343a40; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">ค้นหา</button>
                 <a href="/search" style="padding: 10px; background: #f56c6c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">ล้างค่า</a>
             </div>
-            
+
         </form>
     </div>
 
     <h3 style="border-bottom: 2px solid #eee; padding-bottom: 10px; color: #333;">ผลลัพธ์การค้นหา</h3>
-    
+
     <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
         <?php if (!empty($data['activities'])): ?>
             <?php foreach ($data['activities'] as $activity): ?>
                 <div style="border: 1px solid #ddd; border-radius: 8px; width: 300px; overflow: hidden; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
-                    
+
                     <?php if (!empty($activity['cover_image'])): ?>
                         <img src="/public<?= htmlspecialchars($activity['cover_image']) ?>" alt="ภาพปกกิจกรรม" style="width: 100%; height: 180px; object-fit: cover;">
                     <?php else: ?>
@@ -53,9 +53,32 @@
                         <h3 style="margin-top: 0;"><?= htmlspecialchars($activity['Title']) ?></h3>
                         <p style="margin: 5px 0;"><strong>📅 วันที่จัด:</strong> <?= htmlspecialchars($activity['StartDate']) ?></p>
                         <p style="margin: 5px 0;"><strong>👥 รับสมัคร:</strong> <?= htmlspecialchars($activity['Max_Participants']) ?> คน</p>
-                        <a href="/exe?id=<?= $activity['AID'] ?>" style="display: block; text-align: center; margin-top: 15px; padding: 8px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">ดูรายละเอียด</a>
+                        <?php
+                        $is_expired = false;
+                        if (!empty($activity['EndDate'])) {
+                            // ดึงเวลาปัจจุบัน
+                            $current_time = time();
+                            // แปลงวันสิ้นสุดเป็น timestamp (ปรับให้เป็นเวลา 23:59:59 ของวันนั้นเพื่อไม่ให้หมดอายุตั้งแต่เริ่มวัน)
+                            $end_time = strtotime(date('Y-m-d 23:59:59', strtotime($activity['EndDate'])));
+
+                            // ถ้าเวลาปัจจุบัน มากกว่า เวลาสิ้นสุด = หมดอายุแล้ว
+                            if ($current_time > $end_time) {
+                                $is_expired = true;
+                            }
+                        }
+                        ?>
+
+                        <?php if ($is_expired): ?>
+                            <div style="display: block; text-align: center; margin-top: 15px; padding: 8px; background: #6c757d; color: white; border-radius: 4px; font-weight: bold; cursor: not-allowed;">
+                                ปิดรับเข้าร่วมแล้ว
+                            </div>
+                        <?php else: ?>
+                            <a href="/exe?id=<?= $activity['AID'] ?>" style="display: block; text-align: center; margin-top: 15px; padding: 8px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                                ดูรายละเอียด
+                            </a>
+                        <?php endif; ?>
                     </div>
-                    
+
                 </div>
             <?php endforeach; ?>
         <?php else: ?>

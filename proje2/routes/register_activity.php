@@ -34,6 +34,7 @@ if ($aid > 0) {
     $stmt->bind_param("iis", $aid, $uid, $status);
     
     if ($stmt->execute()) {
+        ChkinUser("Unchecked", $uid, $aid);
         echo "<script>alert('ส่งคำขอเข้าร่วมกิจกรรมสำเร็จ! กรุณารอผู้สร้างกิจกรรมอนุมัติ'); window.location.href='/activity_detail?id=$aid';</script>";
     } else {
         echo "<script>alert('เกิดข้อผิดพลาดในการสมัคร: " . $conn->error . "'); window.location.href='/activity_detail?id=$aid';</script>";

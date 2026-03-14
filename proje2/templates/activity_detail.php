@@ -25,11 +25,11 @@
     
     <a href="/" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;"> กลับหน้าแรก</a>
 
-    <?php 
+    <?php
         // เช็คว่าใครล็อกอินอยู่ ถ้ายังเป็น0
         $current_uid = $_SESSION['user_id'] ?? 0;
         $user_role = $_SESSION['role'] ?? 'user'; // ดึงบทบาทจาก Session
-         
+
     ?>
 
     <?php if ($current_uid > 0): //ล็อกอินแล้ว ถึงจะเห็นปุ่ม ?>

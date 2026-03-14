@@ -14,6 +14,7 @@ if ($aid > 0 && $uid > 0 && !empty($status)) {
     $stmt->bind_param("sii", $status, $aid, $uid);
     
     if ($stmt->execute()) {
+        ChkinUser("Unchecked" ,$uid, $aid);
         echo "<script>alert('อัปเดตสถานะเรียบร้อย!'); window.location.href='/manage_participants?id=$aid';</script>";
     } else {
         echo "เกิดข้อผิดพลาด: " . $conn->error;

@@ -37,9 +37,34 @@
         <?php endif; ?>
 
         <a href="/my_activities" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;"> กลับ</a>
-
-
     </div>
+    <?php
+        if ($data['user_status'] === 'approved' && isset($_SESSION['user_id']) && $data['user_chk_in']){
+            ?>
+            <div class="bg-gray-400 p-4">
+                <span class="font-bold text-xl">
+                    OTP
+                </span>
+                <div class="bg-white">
+                    <span class="font-bold text-xl">
+                    <?php echo $data['otp']; ?>
+                    </span>
+                </div>
+                <span class="text-xl">รหัสหมดอายุทุกๆ 5 นาที</span>
+            </div>
+        <?php
+        } elseif (!$data['user_chk_in']) { ?>
+            <div style="margin-left: 10px; font-size: 16px;">
+                <span style="background: #28a745; color: white; padding: 6px 10px; border-radius: 4px; font-size: 14px;">✅ สามารถเข้าร่วมได้</span>
+            </div>
+        <?php
+        } else { ?>
+        <div style="margin-left: 10px; font-size: 16px;">
+            <span style="background: #ffc107; color: black; padding: 6px 10px; border-radius: 4px; font-size: 14px;">⏳ รอการอนุมัติเพื่อรับ OTP</span>
+        </div>
+        <?php
+        }
+    ?>
 </main>
 
 <?php include __DIR__ . '/footer.php'; ?>

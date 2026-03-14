@@ -1,14 +1,14 @@
 <?php
 require_once INCLUDES_DIR . '/database.php';
 
-// รับค่า ID ของกิจกรรมจาก URL 
-$id = $_GET['id'] ?? 0;
+// รับค่า ID ของกิจกรรมจาก URL
+$aid = $_GET['id'] ?? 0;
 $conn = getConnection();
 
 //  ดึงข้อมูลกิจกรรม
 $sql = "SELECT * FROM Activity WHERE AID = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("i", $aid);
 $stmt->execute();
 $activity = $stmt->get_result()->fetch_assoc();
 
@@ -20,7 +20,7 @@ if (!$activity) {
 // ดึงรูปภาพ "ทั้งหมด" ของกิจกรรมนี้
 $sql_img = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";
 $stmt_img = $conn->prepare($sql_img);
-$stmt_img->bind_param("i", $id);
+$stmt_img->bind_param("i", $aid);
 $stmt_img->execute();
 $result_img = $stmt_img->get_result();
 
@@ -37,7 +37,7 @@ if ($current_uid > 0) {
     // สมมติว่าตารางชื่อ Registration มีคอลัมน์ UID, AID และ Status
     $sql_status = "SELECT Status FROM Registration WHERE UID = ? AND AID = ?";
     $stmt_status = $conn->prepare($sql_status);
-    $stmt_status->bind_param("ii", $current_uid, $id);
+    $stmt_status->bind_param("ii", $current_uid, $aid);
     $stmt_status->execute();
     $result_status = $stmt_status->get_result();
     
@@ -46,9 +46,17 @@ if ($current_uid > 0) {
     }
 }
 
+$Check = CheckChkin($current_uid, $aid);
+$otp = "";
+if ($user_status === 'approved' && $current_uid > 0 && $Check) {
+    $otp = generateOTP($current_uid, $aid);
+}
+
 // ส่งข้อมูลและรูปภาพไปให้หน้าเว็บแสดงผล
 renderView('details-of-my_activities', [
     'activity' => $activity,
     'images' => $images,
-    'user_status' => $user_status // ✨ ส่งสถานะไปด้วย
+    'user_status' => $user_status,
+    'otp' => $otp,
+    'user_chk_in' => $Check
 ]);

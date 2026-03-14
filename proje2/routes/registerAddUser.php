@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(!checkDuplicateEmail($email)){
         $result =
         insertUserInfo($name, $gender, $email, $birthdate, $occupation, $province, $password);
-        renderView('login');
+        header('Location: /login');
     } else {
         echo "No";
     }

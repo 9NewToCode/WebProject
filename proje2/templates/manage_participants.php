@@ -4,12 +4,29 @@
     <h2> จัดการผู้สมัคร: <?= htmlspecialchars($data['activity']['Title']) ?></h2>
     <a href="/activity_detail?id=<?= $data['aid'] ?>" style="text-decoration: none; color: #007bff;"> กลับไปหน้ารายละเอียด</a>
 
-    <table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse; text-align: left;">
+    <form action="manage_participants?id=<?= $data['aid'] ?>" method="post">
+        <div style="width: 20%;background: gray; margin-left: auto; margin-top: 10px; padding: 4px 8px; border-radius: 4px; border-color: black; border-width: 2px;
+                    display: flex; flex-direction: column;">
+            <div>
+                <span style="font-size: large; padding: 4px 8px;">กรอก UID ที่ต้องการเช็ค</span>
+                <input style="width: 50%; font-size: large; margin: 4px 8px;"
+                type="number" name="target_uid">
+            </div>
+            <span style="font-size: large; padding: 4px 8px;">กรอก OTP ที่ต้องการเช็ค</span>
+            <div style="width: 50%;">
+                <input style="width: 100%; font-size: large; margin: 4px 8px;" name="otp" id="otp" type="text">
+                <button style="width: 100%; font-size: large; margin: 4px 8px; background: white">เช็ค</button>
+            </div>
+        </div>
+    </form>
+
+    <table style="width: 100%; margin-top: 20px; border-collapse: collapse; text-align: left; border-color: black; border-width: 1px;">
         <thead style="background: #f4f4f4;">
             <tr>
             <th style="padding: 10px;">ชื่อผู้ใช้</th>
             <th style="padding: 10px;">อีเมล</th>
             <th style="padding: 10px;">สถานะ</th>
+            <th style="padding: 10px;">สถานะการเข้างาน</th>
             <th style="padding: 10px;">จัดการ</th>
             </tr>
         </thead>
@@ -18,13 +35,21 @@
                 <tr>
                     <td style="padding: 10px;">
                         <a href="/user_profile?uid=<?= $p['UID'] ?>&aid=<?= $data['aid'] ?>" style="text-decoration: none; color: #007bff; font-weight: bold;">
-                            <?= htmlspecialchars($p['Name']) ?> 
+                            <?= htmlspecialchars($p['Name']) ?>
                         </a>
                     </td>
                     <td style="padding: 10px;"><?= htmlspecialchars($p['Email']) ?></td>
-                    <td style="padding: 10px;">
-                        <span style="padding: 4px 8px; border-radius: 4px; background: <?= $p['Status'] == 'approved' ? '#d4edda' : ($p['Status'] == 'rejected' ? '#f8d7da' : '#fff3cd') ?>;">
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; background:
+                        <?= $p['Status'] == 'approved' ? '#d4edda' :
+                        ($p['Status'] == 'rejected' ? '#f8d7da' : '#fff3cd') ?>;">
                             <?= $p['Status'] ?>
+                        </td>
+                    <td style="padding: 10px;">
+                        <span style="padding: 4px 8px; border-radius: 4px; background:
+                        <?= $p['Chk_In_Status'] == 'Checked' ? '#d4edda' :
+                        ($p['Chk_In_Status'] == 'Unchecked' ? '#f8d7da' : '#fff3cd') ?>;">
+                            <?= $p['Chk_In_Status'] ?>
                         </span>
                     </td>
                     <td style="padding: 10px;">
@@ -34,6 +59,7 @@
                 </tr>
             <?php endwhile; ?>
         </tbody>
+    </table>
 
 </main>
 <?php include __DIR__ . '/footer.php'; ?>

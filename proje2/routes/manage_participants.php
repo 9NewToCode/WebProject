@@ -12,17 +12,35 @@ $stmt_act->execute();
 $activity = $stmt_act->get_result()->fetch_assoc();
 
 // ดึงรายชื่อคนที่ลงทะเบียนกิจกรรมนี้ พร้อมข้อมูลจากตาราง User
-$sql = "SELECT r.UID, r.Status, u.Name, u.Email 
-        FROM Registration r 
-        JOIN User u ON r.UID = u.UID 
+$sql = "SELECT r.UID, r.Status, u.Name, u.Email, r.Chk_In_Status
+        FROM Registration r
+        JOIN User u ON r.UID = u.UID
         WHERE r.AID = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $aid);
 $stmt->execute();
 $participants = $stmt->get_result();
 
-renderView('manage_participants', [
-    'activity' => $activity,
-    'participants' => $participants,
-    'aid' => $aid
-]);
+//otp
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $insertedOtp = $_POST['otp'];
+    $uid = $_POST['target_uid'];
+    if (verifyOTP($uid, $aid, $insertedOtp)){
+        if (StatusChk($uid, $aid)){
+            $chkin = "Checked";
+            ChkinUser($chkin, $uid, $aid);
+            echo "<script>alert('อัปเดตสถานะเรียบร้อย!'); window.location.href='/manage_participants?id=$aid';</script>";
+            } else {
+                echo "<script>alert('ยังไม่อนุมัติเข้างาน'); window.location.href='/manage_participants?id=$aid';</script>";
+            }
+        } else {
+        echo "<script>alert('OTP ไม่ถูกต้อง หรืออาจหมดอายุ'); window.location.href='/manage_participants?id=$aid';</script>";
+    }
+
+} else {
+    renderView('manage_participants', [
+        'activity' => $activity,
+        'participants' => $participants,
+        'aid' => $aid
+    ]);
+}

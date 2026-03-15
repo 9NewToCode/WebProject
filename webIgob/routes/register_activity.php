@@ -32,15 +32,13 @@ if ($aid > 0) {
     $sql = "INSERT INTO Registration (AID, UID, Status) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iis", $aid, $uid, $status);
-    $stmt->execute();
-    $conn->close();
-    if ($stmt) {
+    
+    if ($stmt->execute()) {
         ChkinUser("Unchecked", $uid, $aid);
         echo "<script>alert('ส่งคำขอเข้าร่วมกิจกรรมสำเร็จ! กรุณารอผู้สร้างกิจกรรมอนุมัติ'); window.location.href='/activity_detail?id=$aid';</script>";
     } else {
         echo "<script>alert('เกิดข้อผิดพลาดในการสมัคร: " . $conn->error . "'); window.location.href='/activity_detail?id=$aid';</script>";
     }
-    
 } else {
     // ถ้าไม่มีการส่ง ID กิจกรรมมา ให้เด้งกลับหน้าแรก
     header("Location: /");

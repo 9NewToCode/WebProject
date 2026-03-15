@@ -23,7 +23,6 @@ $stmt_img = $conn->prepare($sql_img);
 $stmt_img->bind_param("i", $id);
 $stmt_img->execute();
 $result_img = $stmt_img->get_result();
-$conn->close();
 
 $images = [];
 while ($row = $result_img->fetch_assoc()) {

@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-        $conn->close();
+        
         echo "<script>alert('สร้างกิจกรรมและอัปโหลดรูปภาพสำเร็จ!'); window.location.href='/';</script>";
         exit;
     } else {

@@ -30,8 +30,8 @@
                             <?= htmlspecialchars($activity['Description']) ?>
                         </p>
 
-                        <p style="margin: 5px 0;"><strong> วันที่จัด:</strong> <?= htmlspecialchars($activity['StartDate']) ?></p>
-                        <p style="margin: 5px 0;"><strong> วันที่สิ้นสุด:</strong> <?= htmlspecialchars($activity['EndDate']) ?></p>
+                        <p style="margin: 5px 0;"><strong>  วันที่จัด:</strong> <?= date('d/m/Y', strtotime($activity['StartDate'])) ?></p>
+                        <p style="margin: 5px 0;"><strong> วันที่สิ้นสุด:</strong> <?= date('d/m/Y', strtotime($activity['EndDate'])) ?></p>
 
                         <p style="margin: 5px 0;"><strong> รับสมัคร:</strong> <?= htmlspecialchars($activity['Max_Participants']) ?> คน</p>
 

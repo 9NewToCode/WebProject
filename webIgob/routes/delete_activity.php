@@ -59,9 +59,8 @@ if ($id > 0) {
     $sql_del_act = "DELETE FROM Activity WHERE AID = ?";
     $stmt_del_act = $conn->prepare($sql_del_act);
     $stmt_del_act->bind_param("i", $id);
-    $stmt_del_act->execute();
-    $conn->close();
-    if ($stmt_del_act) {
+
+    if ($stmt_del_act->execute()) {
         // ลบสำเร็จ ให้แจ้งเตือนและกลับไปหน้าแรก
         echo "<script>alert('ลบกิจกรรมเรียบร้อยแล้ว!'); window.location.href='/';</script>";
     } else {

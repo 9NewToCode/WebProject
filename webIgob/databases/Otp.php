@@ -34,7 +34,6 @@ function ChkinUser($chkin, $uid, $aid): bool
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sii", $chkin, $aid, $uid);
     $stmt->execute();
-    $conn->close();
     return  $stmt->affected_rows > 0;
 }
 
@@ -49,7 +48,6 @@ function StatusChk($uid, $aid): bool
     $stmt->execute();
     
     $result = $stmt->get_result();
-    $conn->close();
     
     if ($row = $result->fetch_assoc()) {
         return trim($row['Status']) === 'approved';
@@ -69,7 +67,6 @@ function CheckChkin($uid, $aid): bool
     $stmt->execute();
     
     $result = $stmt->get_result();
-    $conn->close();
     
     if ($row = $result->fetch_assoc()) {
         return trim($row['Chk_In_Status']) === 'Unchecked';

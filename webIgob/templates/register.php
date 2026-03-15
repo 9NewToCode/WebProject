@@ -15,7 +15,7 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">เพศ</label>
-                <select name="gender"
+                <select name="gender" required
                     class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
                     <option value="male">ชาย</option>
                     <option value="female">หญิง</option>
@@ -31,19 +31,19 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">วันเกิด</label>
-                <input type="date" name="birthdate"
+                <input type="date" name="birthdate" required
                     class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">อาชีพ</label>
-                <input type="text" name="occupation"
+                <input type="text" name="occupation" required
                     class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">จังหวัด</label>
-                <input type="text" name="province"
+                <input type="text" name="province" required
                     class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2">
             </div>
 

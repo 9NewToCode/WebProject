@@ -11,7 +11,6 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $uid);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
-$conn->close();
 
 if (!$user) {
     echo "ไม่พบข้อมูลผู้ใช้งาน";

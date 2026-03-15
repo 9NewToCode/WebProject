@@ -13,7 +13,7 @@
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
 
             <h1 class="text-xl font-bold text-gray-800">
-                เว็บดำๆ
+                สร้างกิจกรมมืด
             </h1>
 
             <div class="flex items-center gap-4 text-sm">

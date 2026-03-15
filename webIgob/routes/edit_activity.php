@@ -2,7 +2,7 @@
 require_once INCLUDES_DIR . '/database.php';
 
 $conn = getConnection();
-// รับค่า ID ว่ากำลังจะแก้ไขกิจกรรมไหน
+// ดึง ID จาก URL หรือ POST ให้ชัวร์ที่สุด
 $id = $_GET['id'] ?? $_POST['id'] ?? 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,23 +12,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $start_date = $_POST['start_date'] ?? '';
     $end_date = $_POST['end_date'] ?? '';
     
-    // อัปเดตข้อมูลข้อความและวันที่ 
+    // อัปเดตข้อมูลกิจกรรมหลัก (ใช้ชื่อคอลัมน์ตัวใหญ่ตาม DB ของคุณ)
     $sql = "UPDATE Activity SET Title=?, Description=?, Max_Participants=?, StartDate=?, EndDate=? WHERE AID=?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssissi", $title, $description, $participant_limit, $start_date, $end_date, $id);
     
     if ($stmt->execute()) {
-        
-        //ระบบลบรูปเก่า (ตามที่ผู้ใช้ติ๊ก Checkbox) 
+        // ระบบลบรูปเก่าที่ติ๊กเลือกไว้
         if (!empty($_POST['delete_images'])) {
-            $images_to_delete = $_POST['delete_images'];
-            foreach ($images_to_delete as $img_path) {
-                // ลบไฟล์ออกจากโฟลเดอร์ uploads
-                $file_path = __DIR__ . '/../public' . $img_path;
+            foreach ($_POST['delete_images'] as $img_path) {
+                // ลบไฟล์จริงออกจากเซิร์ฟเวอร์
+                $file_path = __DIR__ . '/../public' . $img_path; 
                 if (file_exists($file_path)) {
                     unlink($file_path);
                 }
-                // ลบข้อมูลออกจากฐานข้อมูล
+                // ลบออกจากฐานข้อมูล
                 $sql_del_img = "DELETE FROM Activity_Image WHERE AID = ? AND Image_Path = ?";
                 $stmt_del_img = $conn->prepare($sql_del_img);
                 $stmt_del_img->bind_param("is", $id, $img_path);
@@ -36,20 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // ระบบอัปโหลดรูปใหม่เพิ่มเติม (ทำงานแยกกัน ไม่ไปลบรูปเก่า) 
+        // ระบบอัปโหลดรูปภาพใหม่เพิ่ม
         if (!empty($_FILES['images']['name'][0])) {
             $upload_dir = __DIR__ . '/../public/uploads/';
-            $total_images = count($_FILES['images']['name']);
-            
-            for ($i = 0; $i < $total_images; $i++) {
-                $file_name = $_FILES['images']['name'][$i];
-                $file_tmp = $_FILES['images']['tmp_name'][$i];
-                
+            // วนลูปจัดการไฟล์ที่อัปโหลดมาใหม่
+            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                $file_name = $_FILES['images']['name'][$key];
                 if (!empty($file_name)) {
                     $new_file_name = time() . '_' . basename($file_name);
                     $destination = $upload_dir . $new_file_name;
                     
-                    if (move_uploaded_file($file_tmp, $destination)) {
+                    if (move_uploaded_file($tmp_name, $destination)) {
                         $image_path = '/uploads/' . $new_file_name; 
                         $sql_new_img = "INSERT INTO Activity_Image (AID, Image_Path) VALUES (?, ?)";
                         $stmt_new_img = $conn->prepare($sql_new_img);
@@ -60,14 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        echo "<script>alert('แก้ไขข้อมูลและรูปภาพสำเร็จ!'); window.location.href='/activity_detail?id=$id';</script>";
+        echo "<script>alert('แก้ไขข้อมูลสำเร็จ!'); window.location.href='/activity_detail?id=$id';</script>";
         exit;
     } else {
         echo "เกิดข้อผิดพลาด: " . $conn->error;
     }
 }
 
-// ถ้าเข้ามาดูเฉยๆ ให้ดึงข้อมูลเก่ามาแสดงที่ฟอร์ม
+// ดึงข้อมูลกิจกรรมมาแสดงในฟอร์ม
 $sql = "SELECT * FROM Activity WHERE AID = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
@@ -75,11 +70,10 @@ $stmt->execute();
 $activity = $stmt->get_result()->fetch_assoc();
 
 if (!$activity) {
-    echo "ไม่พบข้อมูลกิจกรรม";
-    exit;
+    die("ไม่พบข้อมูลกิจกรรม ID: " . htmlspecialchars((string)$id));
 }
 
-// ดึงรูปภาพเก่า
+// ดึงรูปภาพประกอบกิจกรรม
 $sql_img = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";
 $stmt_img = $conn->prepare($sql_img);
 $stmt_img->bind_param("i", $id);
@@ -91,8 +85,7 @@ while ($row = $result_img->fetch_assoc()) {
     $images[] = $row['Image_Path'];
 }
 
-// ส่งข้อมูลไปให้ Template
 renderView('edit_activity', [
     'activity' => $activity,
-    'images' => $images // ส่ง Array รูปภาพไปด้วย
+    'images' => $images
 ]);

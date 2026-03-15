@@ -1,47 +1,83 @@
-<?php include __DIR__ . '/header.php'; ?>
+<?php 
+include __DIR__ . '/header.php'; 
+$act = $data['activity']; 
+$activity_id = $_GET['id'] ?? $act['AID'] ?? 0;
+?>
 
-<main style="padding: 20px; max-width: 600px; margin: auto;">
-    <h2> แก้ไขกิจกรรม</h2>
-    <?php $act = $data['activity']; ?>
-    
-    <form action="/edit_activity?id=<?= $act['AID'] ?>" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="<?= $act['AID'] ?>">
+<main class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-10">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2">✏️ แก้ไขกิจกรรม</h2>
         
-        <label>ชื่อกิจกรรม:</label><br>
-        <input type="text" name="title" value="<?= htmlspecialchars($act['Title']) ?>" required style="width: 100%; padding: 8px;"><br><br>
-        
-        <label>รายละเอียด:</label><br>
-        <textarea name="description" rows="5" required style="width: 100%; padding: 8px;"><?= htmlspecialchars($act['Description']) ?></textarea><br><br>
-        
-        <label>จำนวนที่รับสมัคร (คน):</label><br>
-        <input type="number" name="participant_limit" min="1" value="<?= htmlspecialchars($act['Max_Participants']) ?>" required style="width: 100%; padding: 8px;"><br><br>
-        
-        <label>วันที่จัดกิจกรรม:</label><br>
-        <input type="date" name="start_date" value="<?= date('Y-m-d', strtotime($act['StartDate'])) ?>" required style="width: 100%; padding: 8px;"><br><br>
-
-        <label>วันที่สิ้นสุด:</label><br>
-        <input type="date" name="end_date" value="<?= date('Y-m-d', strtotime($act['EndDate'])) ?>" required style="width: 100%; padding: 8px;"><br><br>
-        
-        <label>รูปภาพปัจจุบัน (ติ๊กถูกที่ภาพเพื่อ <b>ลบทิ้ง</b>):</label><br>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: #f8d7da; padding: 10px; border-radius: 5px;">
-            <?php if (!empty($data['images'])): ?>
-                <?php foreach ($data['images'] as $img): ?>
-                    <div style="text-align: center; background: white; padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
-                        <img src="/public<?= htmlspecialchars($img) ?>" style="width: 100px; height: 80px; object-fit: cover; border-radius: 4px;"><br>
-                        <input type="checkbox" name="delete_images[]" value="<?= htmlspecialchars($img) ?>"> ลบรูปนี้
+        <form action="/edit_activity?id=<?= $activity_id ?>" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <input type="hidden" name="id" value="<?= $activity_id ?>">
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">ชื่อกิจกรรม <span class="text-red-500">*</span></label>
+                <input type="text" name="title" value="<?= htmlspecialchars($act['Title'] ?? '') ?>" required 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 shadow-sm">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">รายละเอียด <span class="text-red-500">*</span></label>
+                <textarea name="description" rows="5" required 
+                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 shadow-sm text-gray-800"><?= htmlspecialchars($act['Description'] ?? '') ?></textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">จำนวนรับสมัคร (คน)</label>
+                    <input type="number" name="participant_limit" min="1" value="<?= (int)($act['Max_Participants'] ?? 0) ?>" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">วันที่เริ่ม</label>
+                    <input type="date" name="start_date" value="<?= date('Y-m-d', strtotime($act['StartDate'] ?? 'now')) ?>" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">วันที่สิ้นสุด</label>
+                    <input type="date" name="end_date" value="<?= date('Y-m-d', strtotime($act['EndDate'] ?? 'now')) ?>" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">🖼️ รูปภาพปัจจุบัน</h3>
+                <?php if (!empty($data['images'])): ?>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                        <?php foreach ($data['images'] as $img): ?>
+                            <div class="bg-white border border-gray-200 rounded-lg p-2 text-center shadow-sm">
+                                <img src="<?= htmlspecialchars($img) ?>" class="w-full h-24 object-cover rounded-md mb-2">
+                                <label class="flex items-center justify-center gap-1 text-xs cursor-pointer text-red-600 font-medium">
+                                    <input type="checkbox" name="delete_images[]" value="<?= htmlspecialchars($img) ?>" class="accent-red-600">
+                                    <span>ลบรูปนี้</span>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p style="color: #666; margin: 0;">ยังไม่มีรูปภาพ</p>
-            <?php endif; ?>
-        </div>
+                <?php else: ?>
+                    <div class="bg-pink-50 text-pink-700 p-4 rounded-lg text-sm border border-pink-100 text-center">ยังไม่มีรูปภาพในกิจกรรมนี้</div>
+                <?php endif; ?>
+            </div>
 
-        <label>อัปโหลดรูปภาพใหม่ (หากไม่ต้องการเปลี่ยนรูป ก็ไม่ต้องใส่):</label><br>
-        <input type="file" name="images[]" accept="image/*" multiple style="width: 100%; padding: 8px;"><br><br>
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold text-blue-800 mb-2">📸 อัปโหลดรูปภาพใหม่เพิ่ม</h3>
+                <input type="file" name="images[]" accept="image/*" multiple 
+                       class="w-full bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-500 cursor-pointer">
+            </div>
 
-        <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;"> บันทึกการแก้ไข</button>
-        <a href="/activity_detail?id=<?= $act['AID'] ?>" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">ยกเลิก</a>
-    </form>
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
+                <a href="/activity_detail?id=<?= $activity_id ?>" 
+                   class="px-6 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    ยกเลิก
+                </a>
+                <button type="submit" 
+                        class="px-10 py-3 text-sm font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 shadow-lg transition-all">
+                    บันทึกการแก้ไข
+                </button>
+            </div>
+        </form>
+    </div>
 </main>
 
 <?php include __DIR__ . '/footer.php'; ?>

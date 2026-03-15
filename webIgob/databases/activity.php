@@ -179,3 +179,56 @@ function getActivitiesByCreator($uid)
 
     return $activities;
 }
+
+function getActivityTitle($aid)
+{
+    global $conn;
+
+    $sql = "SELECT Title FROM Activity WHERE AID = ?";
+    $stmt = $conn->prepare($sql);
+
+    $activity = null;
+
+    if ($stmt) {
+
+        $stmt->bind_param("i", $aid);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $activity = $result->fetch_assoc();
+
+        $stmt->close();
+    }
+
+    return $activity;
+}
+
+function getParticipantsByActivity($aid)
+{
+    global $conn;
+
+    $participants = [];
+
+    $sql = "SELECT r.UID, r.Status, r.Chk_In_Status, u.Name, u.Email
+            FROM Registration r
+            JOIN User u ON r.UID = u.UID
+            WHERE r.AID = ?";
+
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt) {
+
+        $stmt->bind_param("i", $aid);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $participants[] = $row;
+        }
+
+        $stmt->close();
+    }
+
+    return $participants;
+}

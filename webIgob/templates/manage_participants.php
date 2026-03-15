@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php while ($p = $data['participants']->fetch_assoc()): ?>
+            <?php foreach ($data['participants'] as $p): ?>
                 <tr>
                     <td style="padding: 10px;">
                         <a href="/user_profile?uid=<?= $p['UID'] ?>&aid=<?= $data['aid'] ?>" style="text-decoration: none; color: #007bff; font-weight: bold;">
@@ -41,9 +41,9 @@
                         </span>
                     </td>
                     <td style="padding: 10px;">
-                        <span style="padding: 4px 8px; border-radius: 4px; background: <?= isset($p['Check_In_Status']) && $p['Check_In_Status'] == 'Checked' ? '#d4edda' : '#fff3cd' ?>;">
-                            <input type="checkbox" <?= isset($p['Check_In_Status']) && $p['Check_In_Status'] == 'Checked' ? 'checked' : '' ?> disabled>
-                            <?= $p['Check_In_Status'] ?? 'Unchecked' ?>
+                        <span style="padding: 4px 8px; border-radius: 4px; background: <?= isset($p['Chk_In_Status']) && $p['Chk_In_Status'] == 'Checked' ? '#d4edda' : '#fff3cd' ?>;">
+                            <input type="checkbox" <?= isset($p['Chk_In_Status']) && $p['Chk_In_Status'] == 'Checked' ? 'checked' : '' ?> disabled>
+                            <?= $p['Chk_In_Status'] ?? 'Unchecked' ?>
                         </span>
                     </td>
                     <td style="padding: 10px;">
@@ -51,7 +51,7 @@
                         <a href="/update_status?aid=<?= $data['aid'] ?>&uid=<?= $p['UID'] ?>&status=rejected" style="color: red; text-decoration: none; font-weight: bold;">ปฏิเสธ</a>
                     </td>
                 </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </main>

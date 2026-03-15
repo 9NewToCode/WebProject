@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("i", $uid);
         $stmt->execute();
         $result = $stmt->get_result();
+        $conn->close();
         
         if ($row = $result->fetch_assoc()) {
             $_SESSION['user_name'] = $row['Name']; // เก็บชื่อลง Session

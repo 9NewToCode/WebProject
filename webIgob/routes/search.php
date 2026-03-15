@@ -53,6 +53,7 @@ if (!empty($params)) {
 
 $stmt->execute();
 $result = $stmt->get_result();
+$conn->close();
 
 $activities = [];
 if ($result && $result->num_rows > 0) {

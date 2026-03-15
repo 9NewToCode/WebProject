@@ -22,7 +22,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $uid);
 $stmt->execute();
 $result = $stmt->get_result();
-
+$conn->close();
 $activities = [];
 
 if ($result && $result->num_rows > 0) {

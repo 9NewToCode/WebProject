@@ -45,6 +45,7 @@ if ($current_uid > 0) {
         $user_status = $row_status['Status']; // เช่น 'เข้าร่วมแล้ว (อนุมัติ)'
     }
 }
+$conn->close();
 
 $Check = CheckChkin($current_uid, $aid);
 $otp = "";

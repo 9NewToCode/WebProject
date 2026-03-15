@@ -20,6 +20,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $aid);
 $stmt->execute();
 $participants = $stmt->get_result();
+$conn->close();
 
 // ระบบจัดการ OTP เมื่อมีการส่งฟอร์ม (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){

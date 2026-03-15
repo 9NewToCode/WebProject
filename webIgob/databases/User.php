@@ -8,10 +8,12 @@ function checkLogin(string $email, string $password): bool
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
+    $conn->close();
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
         return password_verify($password, $row['Password']);
     }
+    
     return false;
 }
 
@@ -23,6 +25,7 @@ function getUserId(string $email): ?int
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
+    $conn->close();
     $row = $result->fetch_assoc();
     return $row ? (int)$row['UID'] : null;
 }
@@ -47,6 +50,7 @@ function insertUserInfo($name, $gender, $email, $birthdate, $occupation, $provin
     $hashPassword = password_hash($password, PASSWORD_DEFAULT);
     $stmt->bind_param('sssssss', $name, $gender, $email, $birthdate, $occupation, $province, $hashPassword);
     $stmt->execute();
+    $conn->close();
 
     if ($stmt->affected_rows > 0) {
         return true;
@@ -65,6 +69,7 @@ function checkDuplicateEmail($email): bool
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_row();
+    $conn->close();
 
     return $row[0] > 0;
 }

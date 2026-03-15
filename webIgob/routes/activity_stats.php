@@ -52,6 +52,7 @@ $stmt_age = $conn->prepare($sql_age);
 $stmt_age->bind_param("i", $aid);
 $stmt_age->execute();
 $res_age = $stmt_age->get_result();
+$conn->close();
 while ($row = $res_age->fetch_assoc()) { $stats_age[$row['age_group']] = $row['total']; }
 
 renderView('activity_stats', [

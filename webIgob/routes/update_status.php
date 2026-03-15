@@ -12,8 +12,10 @@ if ($aid > 0 && $uid > 0 && !empty($status)) {
     $sql = "UPDATE Registration SET Status = ? WHERE AID = ? AND UID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sii", $status, $aid, $uid);
+    $stmt->execute();
+    $conn->close();
     
-    if ($stmt->execute()) {
+    if ($stmt) {
         ChkinUser("Unchecked" ,$uid, $aid);
         echo "<script>alert('อัปเดตสถานะเรียบร้อย!'); window.location.href='/manage_participants?id=$aid';</script>";
     } else {

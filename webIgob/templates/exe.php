@@ -2,8 +2,8 @@
 <main style="padding: 20px; max-width: 800px; margin: auto;">
     <?php $act = $data['activity']; ?>
     <h1 style="color: #333;"><?= htmlspecialchars($act['Title']) ?></h1>
-    <p style="color: #666;"><strong> วันที่จัด:</strong> <?= htmlspecialchars($act['StartDate']) ?></p>
-    <p style="color: #666;"><strong> วันที่สิ้นสุด:</strong> <?= htmlspecialchars($act['EndDate']) ?></p>
+    <p style="margin: 5px 0;"><strong> วันที่จัด:</strong> <?= date('d/m/Y', strtotime($act['StartDate'])) ?></p>
+    <p style="margin: 5px 0;"><strong> วันที่สิ้นสุด:</strong> <?= date('d/m/Y', strtotime($act['EndDate'])) ?></p>
     <p style="color: #666;"><strong> จำนวนที่รับสมัคร:</strong> <?= htmlspecialchars($act['Max_Participants']) ?> คน</p>
     
     <hr>

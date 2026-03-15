@@ -92,7 +92,7 @@ function searchActivities($search_name = '', $start_date = '', $end_date = '', $
 
 function getActivityById($aid)
 {
-    $conn = getConnection();
+    global $conn;
 
     $sql = "SELECT * FROM Activity WHERE AID = ?";
     $stmt = $conn->prepare($sql);
@@ -108,7 +108,7 @@ function getActivityById($aid)
 
 function getActivityImages($aid)
 {
-    $conn = getConnection();
+    global $conn;
 
     $sql = "SELECT Image_Path FROM Activity_Image WHERE AID = ?";
     $stmt = $conn->prepare($sql);
@@ -129,7 +129,7 @@ function getActivityImages($aid)
 
 function getUserActivityStatus($uid, $aid)
 {
-    $conn = getConnection();
+    global $conn;
 
     $sql = "SELECT Status FROM Registration WHERE UID = ? AND AID = ?";
     $stmt = $conn->prepare($sql);
